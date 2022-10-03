@@ -1,0 +1,52 @@
+version: '3.3'
+
+services:
+
+  php:
+    build: 
+      context: .
+      dockerfile: Dockerfile-php
+    ports:
+      - 9010:9000
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile-nginx
+    volumes:
+      - ./../frontend/:/usr/share/nginx/html
+    ports:
+      - 8090:80
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile-backend
+    volumes:
+      - ./../backend/:/app/
+    ports:
+      - 8081:8080
+
+  mysql:
+    build:
+      context: .
+      dockerfile: Dockerfile-mysql
+    volumes: 
+        - ./mysql/:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: "test123"
+      MYSQL_DATABASE: "mysql1"
+    ports:
+      - 3310:3306
+
+  redis:
+    build:
+      context: .
+      dockerfile: Dockerfile-redis
+
+  adminer:
+    build:
+      context: .
+      dockerfile: Dockerfile-adminer
+    ports:
+      - 9000:8080
+
